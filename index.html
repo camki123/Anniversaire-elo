@@ -1,147 +1,452 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💌</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Lettre d'Anniversaire - Joyeux Anniversaire mon chat ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* Empêche la sélection de texte pour un effet plus propre */
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #8B5A2B 0%, #5C3A1A 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Cormorant Garamond', 'Times New Roman', serif;
+            padding: 20px;
+            cursor: pointer;
+        }
 
-<style>
-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#0f0f14;
-}
+        /* Conteneur principal de la lettre */
+        .letter-container {
+            position: relative;
+            width: 95%;
+            max-width: 750px;
+            min-height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+            cursor: pointer;
+        }
 
-/* ENVELOPPE */
-.envelope{
-    position:relative;
-    width:360px;
-    height:240px;
-    cursor:pointer;
-    perspective:1000px;
-}
+        /* Enveloppe extérieure style papier old school */
+        .envelope {
+            position: relative;
+            width: 100%;
+            background: #FDF8EC;
+            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px);
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 0 1px #e3d6b5 inset, 0 0 0 2px #fff6e5 inset;
+            transition: transform 0.3s;
+        }
 
-/* BASE */
-.base{
-    width:100%;
-    height:100%;
-    background:#e7d7c9;
-    border-radius:10px;
-    position:absolute;
-    box-shadow:0 20px 50px rgba(0,0,0,0.5);
-}
+        /* Zone des volets (3 parties) */
+        .flaps {
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            transform-style: preserve-3d;
+        }
 
-/* FLAP */
-.flap{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:#d8c2b0;
-    clip-path: polygon(0 0, 50% 55%, 100% 0);
-    transform-origin:top;
-    transition:1s ease;
-    z-index:3;
-}
+        /* Volet haut (fermé) */
+        .flap-top {
+            background: #FDF4E0;
+            height: 180px;
+            width: 100%;
+            border-bottom: 1px solid #e5d5b0;
+            transform-origin: top;
+            transform: rotateX(0deg);
+            transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            z-index: 3;
+        }
+        
+        /* Volet milieu (texte) */
+        .flap-middle {
+            background: #FFF9EF;
+            padding: 30px 40px;
+            min-height: 280px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid #f3e7cf;
+            border-bottom: 1px solid #f3e7cf;
+        }
+        
+        /* Volet bas */
+        .flap-bottom {
+            background: #FDF4E0;
+            height: 120px;
+            width: 100%;
+            transform-origin: bottom;
+            transform: rotateX(0deg);
+            transition: transform 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            z-index: 1;
+        }
 
-/* CIRE REALISTE */
-.seal{
-    position:absolute;
-    width:70px;
-    height:70px;
-    background: radial-gradient(circle at 30% 30%, #ff4d4d, #7a001c);
-    border-radius:50%;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    z-index:5;
-    box-shadow:0 0 20px rgba(255,0,60,0.4);
-    transition:0.6s ease;
-}
+        /* État ouvert : dépliage */
+        .letter-container.open .flap-top {
+            transform: rotateX(-180deg);
+        }
+        .letter-container.open .flap-bottom {
+            transform: rotateX(180deg);
+        }
 
-.seal::before{
-    content:"❤";
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    color:white;
-    font-size:26px;
-}
-
-/* LETTRE */
-.letter{
-    position:absolute;
-    width:90%;
-    height:90%;
-    top:5%;
-    left:5%;
-    background:#fdf6ee;
-    border:1px solid rgba(0,0,0,0.1);
-    border-radius:6px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-
-    font-family:'Dancing Script', cursive;
-    font-size:32px;
-    color:#2b2b2b;
-
-    transform: translateY(120%);
-    transition:1s ease;
-    padding:20px;
-}
-
-/* CADRE VINTAGE */
-.letter::before{
-    content:"";
-    position:absolute;
-    inset:10px;
-    border:1px solid rgba(0,0,0,0.15);
-    border-radius:4px;
-    pointer-events:none;
-}
-
-/* OUVERTURE */
-.envelope.open .flap{
-    transform:rotateX(180deg);
-}
-
-.envelope.open .letter{
-    transform:translateY(0);
-}
-
-.envelope.open .seal{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(0.3);
-}
-</style>
+        /* Sceau en cire rouge en forme de coeur */
+        .seal {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85px;
+            height: 85px;
+            background: #C73C2B;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3), 0 0 0 3px #FAD6C0 inset, 0 0 0 6px #A52A1A inset;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffecd8;
+            text-shadow: 0 2px 3px #5a1e12;
+            backdrop-filter: blur(0px);
+            animation: subtleGlow 1.8s infinite alternate;
+        }
+        
+        /* forme plus en coeur grâce au pseudo-élément */
+        .seal::before {
+            content: "❤️";
+            position: absolute;
+            font-size: 48px;
+            color: #ffd966;
+            text-shadow: 0 2px 4px #671f10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* animation clignotement doux */
+        @keyframes subtleGlow {
+            0% { box-shadow: 0 8px 15px rgba(0,0,0,0.3), 0 0 0 3px #FAD6C0 inset, 0 0 0 6px #A52A1A inset; filter: brightness(1);}
+            100% { box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 4px #FFE0B5 inset, 0 0 0 7px #B63A28 inset; filter: brightness(1.08);}
+        }
+        
+        /* Quand le sceau est "cassé" on le désactive visuellement */
+        .seal.broken {
+            background: #8B2C1E;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 0 0 2px #b94933 inset;
+            transform: translateX(-50%) scale(0.85) rotate(5deg);
+            filter: grayscale(0.2);
+            opacity: 0.8;
+            pointer-events: none;
+            animation: none;
+        }
+        .seal.broken::before {
+            content: "💔";
+            font-size: 42px;
+            filter: drop-shadow(0 0 1px #5a1e12);
+        }
+        
+        /* Texte intérieur masqué jusqu'à l'apparition finale */
+        .message-content {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8B3C2C;
+            font-family: 'Georgia', 'Cormorant Garamond', cursive;
+            letter-spacing: 1px;
+            background: rgba(255,250,225,0.9);
+            padding: 20px;
+            border-radius: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-top: 10px;
+        }
+        
+        .message-content.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Bougie animée (cachée au début) */
+        .candle {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 30;
+            transition: transform 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+            pointer-events: none;
+            filter: drop-shadow(0 0 6px rgba(255,180,40,0.6));
+        }
+        
+        .candle.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .candle-body {
+            width: 28px;
+            height: 90px;
+            background: linear-gradient(120deg, #fff9e8, #ffefc0);
+            border-radius: 14px 14px 6px 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.8);
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .wick {
+            width: 4px;
+            height: 12px;
+            background: #2d1b0a;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .flame {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 28px;
+            background: radial-gradient(circle, #FFB347, #FF6F00);
+            border-radius: 80% 20% 55% 45% / 60% 40% 60% 40%;
+            animation: flicker 0.15s infinite alternate;
+            box-shadow: 0 0 18px 4px #ff9f2e;
+        }
+        
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-1deg); opacity: 0.95; width: 16px; height: 26px;}
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 1; width: 19px; height: 30px;}
+        }
+        
+        /* Conteneur pour le texte d'info invitant à cliquer */
+        .click-hint {
+            position: absolute;
+            bottom: -35px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            color: #F7E9C3;
+            text-shadow: 1px 1px 0 #3b240e;
+            font-weight: bold;
+            background: rgba(0,0,0,0.3);
+            width: fit-content;
+            margin: 0 auto;
+            padding: 4px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(3px);
+            pointer-events: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 650px) {
+            .flap-middle {
+                padding: 20px 18px;
+            }
+            .message-content {
+                font-size: 1.3rem;
+                padding: 14px;
+            }
+            .seal {
+                width: 70px;
+                height: 70px;
+                bottom: -28px;
+            }
+            .seal::before {
+                font-size: 40px;
+            }
+        }
+        
+        /* Style du contenu texte avant révél */
+        .inner-letter-text {
+            font-family: 'Courier New', monospace;
+            color: #b97f5a;
+            text-align: center;
+            font-style: italic;
+            font-size: 1rem;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f0e0b0" width="20px" height="20px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>') repeat;
+            background-size: 20px;
+            background-blend-mode: overlay;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .inner-preview {
+            font-size: 1rem;
+            color: #ac8e66;
+        }
+        
+        .hidden-message {
+            display: block;
+        }
+        
+        button, div {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="envelope" onclick="openLetter(this)">
-    <div class="base"></div>
-    <div class="flap"></div>
-    <div class="seal"></div>
-
-    <div class="letter">
-        Joyeux anniversaire mon chat ❤️
+<div class="letter-container" id="letterContainer">
+    <div class="envelope">
+        <div class="flaps">
+            <div class="flap-top"></div>
+            <div class="flap-middle">
+                <div class="inner-letter-text" id="innerPreview">
+                    <span class="inner-preview">✨ Une lettre scellée pour toi... ✨</span>
+                    <div style="margin-top:20px;">🕯️ clique sur le sceau 🕯️</div>
+                </div>
+                <div class="message-content" id="birthdayMessage">
+                    Joyeux anniversaire mon chat ❤️
+                </div>
+            </div>
+            <div class="flap-bottom"></div>
+        </div>
+        <div class="seal" id="sealHeart"></div>
+    </div>
+    <div class="click-hint">💌 Clique sur le sceau en cœur pour ouvrir la lettre 💌</div>
+    
+    <!-- Bougie animée qui passera au-dessus -->
+    <div class="candle" id="candleAnim">
+        <div class="candle-body">
+            <div class="wick"></div>
+            <div class="flame"></div>
+        </div>
     </div>
 </div>
 
 <script>
-function openLetter(el){
-    el.classList.add("open");
-}
+    (function() {
+        const container = document.getElementById('letterContainer');
+        const seal = document.getElementById('sealHeart');
+        const candle = document.getElementById('candleAnim');
+        const messageDiv = document.getElementById('birthdayMessage');
+        const previewDiv = document.getElementById('innerPreview');
+        
+        let isOpen = false;
+        let animationCompleted = false;  // pour éviter double déclenchement
+        
+        // Fonction d'ouverture magique
+        function openLetter() {
+            if (isOpen) return;
+            isOpen = true;
+            
+            // 1. Casser le sceau visuellement
+            seal.classList.add('broken');
+            
+            // 2. Déplier la lettre (rajouter la classe open pour rotation des volets)
+            container.classList.add('open');
+            
+            // 3. Après un court délai, apparition de la bougie qui glisse / apparaît
+            setTimeout(() => {
+                candle.classList.add('active');
+                // la bougie fait son petit effet flicker naturel par CSS
+            }, 400);
+            
+            // 4. Laisser la bougie "illuminer" et faire apparaître le texte après un défilement poétique
+            setTimeout(() => {
+                // masquer l'aperçu avant
+                if (previewDiv) {
+                    previewDiv.style.transition = "opacity 0.5s";
+                    previewDiv.style.opacity = "0";
+                    setTimeout(() => {
+                        previewDiv.style.display = "none";
+                    }, 500);
+                }
+                // Afficher le message avec un effet doux
+                messageDiv.classList.add('visible');
+                
+                // Optionnel : faire un petit effet de "souffle" sur la bougie pour qu'elle vacille plus fort
+                const flame = document.querySelector('.flame');
+                if (flame) {
+                    flame.style.animation = 'flicker 0.08s infinite alternate';
+                    setTimeout(() => {
+                        flame.style.animation = 'flicker 0.15s infinite alternate';
+                    }, 800);
+                }
+                
+                // Supprimer la bougie après 3 secondes en fondu (elle disparaît délicatement)
+                setTimeout(() => {
+                    if(candle) {
+                        candle.style.transition = "opacity 1s ease";
+                        candle.style.opacity = "0";
+                        setTimeout(() => {
+                            candle.style.display = "none";
+                        }, 1000);
+                    }
+                }, 2800);
+                
+            }, 1300);  // Laisse la bougie faire son entrée puis lettre dévoilée
+        }
+        
+        // Gestion du clic sur le sceau (ou la lettre entière ? On attache au sceau précisément)
+        seal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!animationCompleted) {
+                animationCompleted = true;
+                openLetter();
+            }
+        });
+        
+        // Option supplémentaire : si l'utilisateur clique ailleurs sur la lettre, cela peut aider sur mobile
+        // On évite de double déclencher, mais ça peut être plus naturel d'ouvrir en cliquant n'importe où.
+        // Mais pour respecter le brief : "une fois qu'on clique sur la lettre", on va permettre aussi clic sur la lettre 
+        // MAIS il faut que le sceau se déchire (déjà fait). Pour une meilleure expérience mobile on peut autoriser le container.
+        container.addEventListener('click', (e) => {
+            // Si le clic n'est pas déjà géré par le sceau et que l'animation n'est pas encore faite
+            if (!animationCompleted && e.target !== seal && !seal.contains(e.target)) {
+                animationCompleted = true;
+                openLetter();
+            }
+        });
+        
+        // Préchargement de l'effet: désactiver double ouverture
+        // Ajustement visuel pour les mobiles : les volets ont une bonne profondeur 3d
+        // Rajout d'un style pour fixer le conteneur 3d
+        const style = document.createElement('style');
+        style.textContent = `
+            .letter-container.open .flap-top { transform: rotateX(-180deg); transition-delay: 0.05s; }
+            .letter-container.open .flap-bottom { transform: rotateX(180deg); transition-delay: 0.1s; }
+            .flap-top, .flap-bottom { backface-visibility: hidden; }
+            .message-content { transition-delay: 0.2s; }
+            .inner-letter-text { transition: opacity 0.4s; }
+        `;
+        document.head.appendChild(style);
+        
+        // Ajout d’un effet sonore imaginaire ? (juste visuel)
+        // Pour le réalisme du sceau qui se déchire, petit motion
+        setTimeout(() => {
+            // Au cas où on veut un effet pulsé final, rien.
+        }, 100);
+    })();
 </script>
-
 </body>
 </html>
